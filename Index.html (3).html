@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eventos Ranchos El Jefe | Un Rancho Hecho Pa'l Reventón</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#C9A84C;--gold-light:#E8D5A0;--gold-dark:#8B6914;
+  --cream:#FAF6EE;--dark:#1A1612;--brown:#3D2E1E;--brown-light:#6B5744;
+  --sage:#7A8B6F;--sage-light:#C5D1BC;--white:#FFFFFF;
+  --font-display:'Playfair Display',serif;--font-body:'Outfit',sans-serif;--font-accent:'Cormorant Garamond',serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);color:var(--dark);background:var(--cream);overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 40px;display:flex;justify-content:space-between;align-items:center;transition:all .4s}
+nav.scrolled{background:rgba(26,22,18,.95);backdrop-filter:blur(12px);padding:14px 40px;box-shadow:0 2px 30px rgba(0,0,0,.15)}
+.nav-logo{font-family:var(--font-display);font-size:22px;color:var(--gold);letter-spacing:1px;text-decoration:none}
+.nav-logo span{color:var(--cream);font-weight:400}
+.nav-right{display:flex;align-items:center;gap:8px}
+.nav-links{display:flex;gap:32px;align-items:center}
+.nav-links a{color:var(--cream);text-decoration:none;font-size:13px;letter-spacing:2px;text-transform:uppercase;font-weight:400;transition:color .3s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--gold);transition:width .3s}
+.nav-links a:hover::after{width:100%}
+.nav-links a:hover{color:var(--gold)}
+.nav-cta{background:var(--gold)!important;color:var(--dark)!important;padding:10px 24px;font-weight:500;letter-spacing:2px;font-size:12px;transition:all .3s!important;border-radius:0}
+.nav-cta:hover{background:var(--gold-light)!important;transform:translateY(-1px)}
+.nav-cta::after{display:none!important}
+
+/* LANG TOGGLE */
+.lang-toggle{display:flex;align-items:center;border:1px solid rgba(250,246,238,.2);margin-left:20px;overflow:hidden}
+.lang-btn{padding:7px 14px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(250,246,238,.5);background:transparent;border:none;cursor:pointer;font-family:var(--font-body);transition:all .3s;font-weight:500}
+.lang-btn.active{background:var(--gold);color:var(--dark)}
+.lang-btn:hover:not(.active){color:var(--cream)}
+
+/* HERO */
+.hero{position:relative;height:100vh;min-height:700px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(160deg,#2C1E10 0%,#1A1612 40%,#0D0B08 100%);z-index:0}
+.hero-bg::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(201,168,76,.08) 0%,transparent 60%)}
+.hero-bg::after{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");opacity:.5}
+.hero-content{position:relative;z-index:2;text-align:center;max-width:800px;padding:0 20px}
+.hero-tagline{font-family:var(--font-accent);font-size:16px;letter-spacing:6px;text-transform:uppercase;color:var(--gold);margin-bottom:24px;opacity:0;animation:fadeUp .8s .3s forwards}
+.hero-title{font-family:var(--font-display);font-size:clamp(42px,7vw,80px);color:var(--cream);line-height:1.05;margin-bottom:16px;opacity:0;animation:fadeUp .8s .5s forwards}
+.hero-title em{font-style:italic;color:var(--gold)}
+.hero-subtitle{font-family:var(--font-accent);font-size:clamp(18px,2.5vw,26px);color:var(--gold-light);font-weight:400;margin-bottom:40px;opacity:0;animation:fadeUp .8s .7s forwards;font-style:italic}
+.hero-buttons{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;opacity:0;animation:fadeUp .8s .9s forwards}
+.btn{display:inline-block;padding:16px 40px;font-family:var(--font-body);font-size:13px;letter-spacing:3px;text-transform:uppercase;text-decoration:none;font-weight:500;transition:all .3s;cursor:pointer;border:none}
+.btn-primary{background:var(--gold);color:var(--dark)}
+.btn-primary:hover{background:var(--gold-light);transform:translateY(-2px);box-shadow:0 8px 30px rgba(201,168,76,.3)}
+.btn-outline{background:transparent;color:var(--cream);border:1px solid rgba(250,246,238,.3)}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+.hero-scroll{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:2;opacity:0;animation:fadeUp .8s 1.2s forwards}
+.hero-scroll span{display:block;width:1px;height:40px;background:linear-gradient(to bottom,var(--gold),transparent);margin:0 auto 8px}
+.hero-scroll p{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold-light)}
+.hero-decor{position:absolute;top:50%;right:8%;transform:translateY(-50%);width:200px;height:200px;border:1px solid rgba(201,168,76,.1);border-radius:50%;z-index:1;animation:spin 30s linear infinite}
+.hero-decor::before{content:'';position:absolute;top:-30px;left:-30px;right:-30px;bottom:-30px;border:1px solid rgba(201,168,76,.05);border-radius:50%}
+
+/* SECTIONS */
+section{padding:120px 40px}
+.section-label{font-family:var(--font-accent);font-size:14px;letter-spacing:5px;text-transform:uppercase;color:var(--gold-dark);margin-bottom:12px;display:flex;align-items:center;gap:16px}
+.section-label::before{content:'';width:40px;height:1px;background:var(--gold)}
+.section-title{font-family:var(--font-display);font-size:clamp(32px,4vw,52px);color:var(--dark);line-height:1.15;margin-bottom:20px}
+.section-desc{font-family:var(--font-accent);font-size:20px;color:var(--brown-light);max-width:600px;line-height:1.6;font-style:italic}
+
+/* ABOUT */
+.about{display:grid;grid-template-columns:1fr 1fr;gap:80px;max-width:1200px;margin:0 auto;align-items:center}
+.about-visual{position:relative}
+.about-img{width:100%;aspect-ratio:4/5;background:linear-gradient(135deg,#3D2E1E,#2C1E10);position:relative;overflow:hidden}
+.about-img::before{content:'';position:absolute;inset:0;background:linear-gradient(45deg,rgba(201,168,76,.15),transparent 60%)}
+.about-img-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--gold-light);font-family:var(--font-accent);font-size:18px;gap:12px;font-style:italic}
+.about-img-placeholder svg{width:48px;height:48px;stroke:var(--gold);fill:none;stroke-width:1.5}
+.about-accent{position:absolute;bottom:-20px;right:-20px;width:180px;height:180px;border:1px solid var(--gold);opacity:.3}
+.about-text{padding:20px 0}
+.about-text p{font-size:16px;line-height:1.8;color:var(--brown-light);margin-top:24px}
+.about-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px;padding-top:40px;border-top:1px solid rgba(201,168,76,.2)}
+.stat{text-align:center}
+.stat-number{font-family:var(--font-display);font-size:36px;color:var(--gold-dark)}
+.stat-label{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--brown-light);margin-top:4px}
+
+/* EVENTS */
+.events-section{background:var(--dark);color:var(--cream)}
+.events-section .section-label{color:var(--gold)}
+.events-section .section-title{color:var(--cream)}
+.events-section .section-desc{color:var(--gold-light)}
+.events-header{max-width:1200px;margin:0 auto 60px}
+.events-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1200px;margin:0 auto}
+.event-card{position:relative;aspect-ratio:3/4;overflow:hidden;cursor:pointer}
+.event-card-bg{position:absolute;inset:0;background:linear-gradient(135deg,#2C1E10,#1A1612);transition:transform .6s cubic-bezier(.25,.46,.45,.94)}
+.event-card:hover .event-card-bg{transform:scale(1.05)}
+.event-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(26,22,18,.9) 0%,rgba(26,22,18,.2) 50%,transparent 100%);z-index:1;transition:all .4s}
+.event-card:hover .event-card-overlay{background:linear-gradient(to top,rgba(26,22,18,.95) 0%,rgba(201,168,76,.1) 50%,transparent 100%)}
+.event-card-content{position:absolute;bottom:0;left:0;right:0;padding:32px;z-index:2}
+.event-card-number{font-family:var(--font-display);font-size:48px;color:rgba(201,168,76,.15);position:absolute;top:24px;right:24px;z-index:2}
+.event-card h3{font-family:var(--font-display);font-size:28px;color:var(--cream);margin-bottom:8px}
+.event-card p{font-family:var(--font-accent);font-size:16px;color:var(--gold-light);font-style:italic;line-height:1.5;opacity:0;transform:translateY(10px);transition:all .4s}
+.event-card:hover p{opacity:1;transform:translateY(0)}
+.event-card-line{width:40px;height:1px;background:var(--gold);margin-bottom:16px;transition:width .4s}
+.event-card:hover .event-card-line{width:80px}
+
+/* GALLERY */
+.gallery-section{background:var(--cream)}
+.gallery-header{max-width:1200px;margin:0 auto 60px;display:flex;justify-content:space-between;align-items:flex-end}
+.gallery-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,250px);gap:16px}
+.gallery-item{position:relative;overflow:hidden;cursor:pointer}
+.gallery-item-bg{position:absolute;inset:0;background:linear-gradient(135deg,#3D2E1E,#2C1E10);transition:transform .5s}
+.gallery-item:hover .gallery-item-bg{transform:scale(1.08)}
+.gallery-item::after{content:'';position:absolute;inset:0;background:rgba(26,22,18,.2);transition:background .3s;z-index:1}
+.gallery-item:hover::after{background:rgba(201,168,76,.1)}
+.gallery-item:nth-child(1){grid-column:span 2;grid-row:span 2}
+.gallery-item:nth-child(4){grid-column:span 2}
+.gi-placeholder{position:absolute;inset:0;z-index:2;display:flex;align-items:center;justify-content:center;color:var(--gold-light);font-family:var(--font-accent);font-size:14px;font-style:italic;letter-spacing:1px}
+
+/* PACKAGES */
+.packages-section{background:var(--white)}
+.packages-header{max-width:1200px;margin:0 auto 60px;text-align:center}
+.packages-header .section-label{justify-content:center}
+.packages-header .section-label::before{display:none}
+.packages-header .section-desc{margin:0 auto}
+.packages-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;max-width:1200px;margin:0 auto}
+.package{padding:48px 36px;border:1px solid rgba(201,168,76,.15);position:relative;transition:all .4s;text-align:center}
+.package:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 20px 60px rgba(201,168,76,.1)}
+.package.featured{border-color:var(--gold);background:linear-gradient(to bottom,rgba(201,168,76,.03),transparent)}
+.package-badge{position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--dark);font-size:10px;letter-spacing:3px;text-transform:uppercase;padding:6px 20px;font-weight:600}
+.package h3{font-family:var(--font-display);font-size:28px;color:var(--dark);margin-bottom:8px;margin-top:16px}
+.package-price{font-family:var(--font-display);font-size:42px;color:var(--gold-dark);margin:20px 0}
+.package-price span{font-size:16px;color:var(--brown-light);font-family:var(--font-body)}
+.package ul{list-style:none;margin:24px 0 32px;text-align:left}
+.package li{padding:10px 0;border-bottom:1px solid rgba(0,0,0,.05);font-size:14px;color:var(--brown-light);display:flex;align-items:center;gap:10px}
+.package li::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0}
+.package .btn{width:100%;text-align:center;display:block;padding:14px;font-size:12px}
+
+/* TESTIMONIALS */
+.testimonials{background:var(--dark);color:var(--cream);text-align:center;position:relative;overflow:hidden}
+.testimonials::before{content:'\u201C';font-family:var(--font-display);font-size:300px;color:rgba(201,168,76,.04);position:absolute;top:-40px;left:50%;transform:translateX(-50%);line-height:1}
+.testimonials .section-label{justify-content:center;color:var(--gold)}
+.testimonials .section-label::before{display:none}
+.testimonials-content{max-width:700px;margin:0 auto}
+.testimonial-text{font-family:var(--font-accent);font-size:24px;line-height:1.7;color:var(--cream);font-style:italic;margin-bottom:32px}
+.testimonial-author{font-family:var(--font-body);font-size:14px;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
+.testimonial-event{font-family:var(--font-accent);font-size:15px;color:var(--gold-light);font-style:italic;margin-top:4px}
+.testimonial-dots{display:flex;gap:8px;justify-content:center;margin-top:40px}
+.testimonial-dots span{width:8px;height:8px;border-radius:50%;background:rgba(201,168,76,.2);cursor:pointer;transition:all .3s}
+.testimonial-dots span.active{background:var(--gold);width:24px;border-radius:4px}
+
+/* CONTACT */
+.contact-section{background:var(--cream)}
+.contact-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px}
+.contact-info{padding:20px 0}
+.contact-info h2{font-family:var(--font-display);font-size:42px;color:var(--dark);margin-bottom:24px;line-height:1.15}
+.contact-detail{display:flex;align-items:flex-start;gap:16px;margin-bottom:24px}
+.contact-icon{width:40px;height:40px;border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.contact-icon svg{width:18px;height:18px;stroke:var(--gold);fill:none;stroke-width:1.5}
+.contact-detail h4{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--dark);margin-bottom:4px;font-weight:500}
+.contact-detail p{font-size:15px;color:var(--brown-light);line-height:1.5}
+.contact-social{display:flex;gap:12px;margin-top:40px}
+.contact-social a{width:44px;height:44px;border:1px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;transition:all .3s;text-decoration:none}
+.contact-social a:hover{background:var(--gold);border-color:var(--gold)}
+.contact-social a svg{width:18px;height:18px;fill:var(--gold);transition:fill .3s}
+.contact-social a:hover svg{fill:var(--dark)}
+.contact-form{background:var(--white);padding:48px;border:1px solid rgba(201,168,76,.1)}
+.contact-form h3{font-family:var(--font-display);font-size:24px;color:var(--dark);margin-bottom:8px}
+.contact-form > p{font-family:var(--font-accent);font-size:16px;color:var(--brown-light);font-style:italic;margin-bottom:32px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--brown-light);margin-bottom:8px;font-weight:500}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:14px 16px;border:1px solid rgba(0,0,0,.1);background:var(--cream);font-family:var(--font-body);font-size:15px;color:var(--dark);outline:none;transition:border-color .3s;border-radius:0;-webkit-appearance:none}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--gold)}
+.form-group textarea{resize:vertical;min-height:100px}
+.contact-form .btn{width:100%;text-align:center;margin-top:8px}
+
+/* FOOTER */
+footer{background:var(--dark);color:var(--cream);padding:80px 40px 40px}
+.footer-inner{max-width:1200px;margin:0 auto}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:60px;margin-bottom:60px}
+.footer-brand h2{font-family:var(--font-display);font-size:24px;color:var(--gold);margin-bottom:12px}
+.footer-brand p{font-size:14px;color:rgba(250,246,238,.5);line-height:1.7;max-width:300px}
+.footer-col h4{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;font-weight:500}
+.footer-col a{display:block;font-size:14px;color:rgba(250,246,238,.5);text-decoration:none;margin-bottom:12px;transition:color .3s}
+.footer-col a:hover{color:var(--gold)}
+.footer-bottom{border-top:1px solid rgba(250,246,238,.08);padding-top:32px;display:flex;justify-content:space-between;align-items:center}
+.footer-bottom p{font-size:13px;color:rgba(250,246,238,.3)}
+
+/* WHATSAPP */
+.whatsapp-float{position:fixed;bottom:28px;right:28px;width:60px;height:60px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:99;box-shadow:0 4px 20px rgba(37,211,102,.4);cursor:pointer;transition:transform .3s;text-decoration:none}
+.whatsapp-float:hover{transform:scale(1.1)}
+.whatsapp-float svg{width:30px;height:30px;fill:white}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:translateY(-50%) rotate(360deg)}}
+.reveal{opacity:0;transform:translateY(30px);transition:all .7s cubic-bezier(.25,.46,.45,.94)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .nav-links{display:none}
+  .about{grid-template-columns:1fr;gap:40px}
+  .events-grid{grid-template-columns:1fr}
+  .gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,200px)}
+  .gallery-item:nth-child(1){grid-column:span 2}
+  .gallery-item:nth-child(4){grid-column:span 1}
+  .packages-grid{grid-template-columns:1fr}
+  .contact-inner{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr 1fr;gap:40px}
+  section{padding:80px 24px}
+  .hero-decor{display:none}
+  nav{padding:16px 20px}
+  .lang-toggle{margin-left:12px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">Ranchos <span>El Jefe</span></a>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="#about" data-es="Nosotros" data-en="About">Nosotros</a>
+      <a href="#events" data-es="Eventos" data-en="Events">Eventos</a>
+      <a href="#gallery" data-es="Galería" data-en="Gallery">Galería</a>
+      <a href="#packages" data-es="Paquetes" data-en="Packages">Paquetes</a>
+      <a href="#testimonials" data-es="Reseñas" data-en="Reviews">Reseñas</a>
+      <a href="#contact" class="nav-cta" data-es="Reservar Tour" data-en="Book a Tour">Reservar Tour</a>
+    </div>
+    <div class="lang-toggle">
+      <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn active" data-lang="es" onclick="setLang('es')">ES</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-decor"></div>
+  <div class="hero-content">
+    <p class="hero-tagline">Homestead, Florida</p>
+    <h1 class="hero-title" data-es="Un Rancho Hecho<br>Pa'l <em>Reventón</em>" data-en="A Ranch Built<br>For the <em>Celebration</em>">Un Rancho Hecho<br>Pa'l <em>Reventón</em></h1>
+    <p class="hero-subtitle" data-es="Bodas · Quinceañeras · Cumpleaños · Eventos Privados" data-en="Weddings · Quinceañeras · Birthdays · Private Events">Bodas · Quinceañeras · Cumpleaños · Eventos Privados</p>
+    <div class="hero-buttons">
+      <a href="#contact" class="btn btn-primary" data-es="Reserva Tu Recorrido" data-en="Book Your Tour">Reserva Tu Recorrido</a>
+      <a href="#events" class="btn btn-outline" data-es="Ver Eventos" data-en="View Events">Ver Eventos</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span></span>
+    <p data-es="Descubre más" data-en="Discover more">Descubre más</p>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" style="padding-top:140px">
+  <div class="about">
+    <div class="about-visual reveal">
+      <div class="about-img">
+        <div class="about-img-placeholder">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span data-es="Foto del rancho" data-en="Ranch photo">Foto del rancho</span>
+        </div>
+      </div>
+      <div class="about-accent"></div>
+    </div>
+    <div class="about-text reveal">
+      <div class="section-label" data-es="Sobre Nosotros" data-en="About Us">Sobre Nosotros</div>
+      <h2 class="section-title" data-es="Donde los<br>sueños se<br>hacen realidad" data-en="Where dreams<br>become<br>reality">Donde los<br>sueños se<br>hacen realidad</h2>
+      <p class="section-desc" data-es="El espacio perfecto para celebrar los momentos más importantes de tu vida." data-en="The perfect space to celebrate the most important moments of your life.">El espacio perfecto para celebrar los momentos más importantes de tu vida.</p>
+      <p data-es="Eventos Ranchos El Jefe es más que un local — es un pedazo de campo en el corazón de Homestead donde tu familia y amigos pueden reunirse para crear recuerdos inolvidables. Con amplios espacios interiores y exteriores, ambiente campestre auténtico, y atención personalizada para cada evento." data-en="Eventos Ranchos El Jefe is more than a venue — it's a piece of countryside in the heart of Homestead where your family and friends can come together to create unforgettable memories. With spacious indoor and outdoor areas, authentic ranch atmosphere, and personalized attention for every event.">Eventos Ranchos El Jefe es más que un local — es un pedazo de campo en el corazón de Homestead donde tu familia y amigos pueden reunirse para crear recuerdos inolvidables. Con amplios espacios interiores y exteriores, ambiente campestre auténtico, y atención personalizada para cada evento.</p>
+      <div class="about-stats">
+        <div class="stat"><div class="stat-number">200+</div><div class="stat-label" data-es="Invitados" data-en="Guests">Invitados</div></div>
+        <div class="stat"><div class="stat-number">5</div><div class="stat-label" data-es="Acres" data-en="Acres">Acres</div></div>
+        <div class="stat"><div class="stat-number">100%</div><div class="stat-label" data-es="Privado" data-en="Private">Privado</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EVENTS -->
+<section id="events" class="events-section">
+  <div class="events-header reveal">
+    <div class="section-label" data-es="Nuestros Eventos" data-en="Our Events">Nuestros Eventos</div>
+    <h2 class="section-title" data-es="Celebra a<br>tu manera" data-en="Celebrate<br>your way">Celebra a<br>tu manera</h2>
+    <p class="section-desc" data-es="Cada evento es único. Nosotros nos encargamos de que el tuyo sea inolvidable." data-en="Every event is unique. We make sure yours is unforgettable.">Cada evento es único. Nosotros nos encargamos de que el tuyo sea inolvidable.</p>
+  </div>
+  <div class="events-grid">
+    <div class="event-card reveal">
+      <div class="event-card-bg"></div><div class="event-card-overlay"></div>
+      <div class="event-card-number">01</div>
+      <div class="event-card-content">
+        <div class="event-card-line"></div>
+        <h3 data-es="Bodas" data-en="Weddings">Bodas</h3>
+        <p data-es="Ceremonias y recepciones con un toque campestre elegante. Tu día perfecto en un entorno natural e íntimo." data-en="Ceremonies and receptions with an elegant ranch touch. Your perfect day in a natural, intimate setting.">Ceremonias y recepciones con un toque campestre elegante. Tu día perfecto en un entorno natural e íntimo.</p>
+      </div>
+    </div>
+    <div class="event-card reveal">
+      <div class="event-card-bg"></div><div class="event-card-overlay"></div>
+      <div class="event-card-number">02</div>
+      <div class="event-card-content">
+        <div class="event-card-line"></div>
+        <h3>Quinceañeras</h3>
+        <p data-es="Celebra esta tradición especial con todo el espacio, la decoración y la magia que tu princesa merece." data-en="Celebrate this special tradition with all the space, décor, and magic your princess deserves.">Celebra esta tradición especial con todo el espacio, la decoración y la magia que tu princesa merece.</p>
+      </div>
+    </div>
+    <div class="event-card reveal">
+      <div class="event-card-bg"></div><div class="event-card-overlay"></div>
+      <div class="event-card-number">03</div>
+      <div class="event-card-content">
+        <div class="event-card-line"></div>
+        <h3 data-es="Fiestas Privadas" data-en="Private Parties">Fiestas Privadas</h3>
+        <p data-es="Cumpleaños, baby showers, graduaciones, reuniones corporativas — cualquier motivo para celebrar." data-en="Birthdays, baby showers, graduations, corporate gatherings — any reason to celebrate.">Cumpleaños, baby showers, graduaciones, reuniones corporativas — cualquier motivo para celebrar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery" class="gallery-section">
+  <div class="gallery-header reveal">
+    <div>
+      <div class="section-label" data-es="Galería" data-en="Gallery">Galería</div>
+      <h2 class="section-title" data-es="Conoce<br>nuestro espacio" data-en="Explore<br>our venue">Conoce<br>nuestro espacio</h2>
+    </div>
+    <a href="#contact" class="btn btn-primary" style="background:var(--dark);color:var(--cream)" data-es="Agenda un Tour" data-en="Schedule a Tour">Agenda un Tour</a>
+  </div>
+  <div class="gallery-grid">
+    <div class="gallery-item reveal"><div class="gallery-item-bg"></div><div class="gi-placeholder" data-es="Área exterior principal" data-en="Main outdoor area">Área exterior principal</div></div>
+    <div class="gallery-item reveal"><div class="gallery-item-bg"></div><div class="gi-placeholder" data-es="Salón interior" data-en="Indoor hall">Salón interior</div></div>
+    <div class="gallery-item reveal"><div class="gallery-item-bg"></div><div class="gi-placeholder" data-es="Decoración de evento" data-en="Event décor">Decoración de evento</div></div>
+    <div class="gallery-item reveal"><div class="gallery-item-bg"></div><div class="gi-placeholder" data-es="Área de estacionamiento" data-en="Parking area">Área de estacionamiento</div></div>
+    <div class="gallery-item reveal"><div class="gallery-item-bg"></div><div class="gi-placeholder" data-es="Detalles y acabados" data-en="Details & finishes">Detalles y acabados</div></div>
+  </div>
+</section>
+
+<!-- PACKAGES -->
+<section id="packages" class="packages-section">
+  <div class="packages-header reveal">
+    <div class="section-label" data-es="Paquetes" data-en="Packages">Paquetes</div>
+    <h2 class="section-title" data-es="Elige tu experiencia" data-en="Choose your experience">Elige tu experiencia</h2>
+    <p class="section-desc" data-es="Paquetes flexibles diseñados para adaptarse a tu visión y presupuesto." data-en="Flexible packages designed to fit your vision and budget.">Paquetes flexibles diseñados para adaptarse a tu visión y presupuesto.</p>
+  </div>
+  <div class="packages-grid">
+    <div class="package reveal">
+      <h3 data-es="Esencial" data-en="Essential">Esencial</h3>
+      <div class="package-price" data-es="Consultar<br><span>precio base</span>" data-en="Inquire<br><span>base price</span>">Consultar<br><span>precio base</span></div>
+      <ul>
+        <li data-es="Uso del espacio por 6 horas" data-en="Venue use for 6 hours">Uso del espacio por 6 horas</li>
+        <li data-es="Mesas y sillas incluidas" data-en="Tables and chairs included">Mesas y sillas incluidas</li>
+        <li data-es="Estacionamiento privado" data-en="Private parking">Estacionamiento privado</li>
+        <li data-es="Área para DJ / música" data-en="DJ / music area">Área para DJ / música</li>
+        <li data-es="Acceso a cocina" data-en="Kitchen access">Acceso a cocina</li>
+      </ul>
+      <a href="#contact" class="btn btn-outline" style="color:var(--dark);border-color:rgba(0,0,0,.15)" data-es="Consultar" data-en="Inquire">Consultar</a>
+    </div>
+    <div class="package featured reveal">
+      <div class="package-badge" data-es="Más Popular" data-en="Most Popular">Más Popular</div>
+      <h3>Premium</h3>
+      <div class="package-price" data-es="Consultar<br><span>todo incluido</span>" data-en="Inquire<br><span>all-inclusive</span>">Consultar<br><span>todo incluido</span></div>
+      <ul>
+        <li data-es="Uso del espacio por 10 horas" data-en="Venue use for 10 hours">Uso del espacio por 10 horas</li>
+        <li data-es="Mesas, sillas y manteles" data-en="Tables, chairs, and linens">Mesas, sillas y manteles</li>
+        <li data-es="Iluminación decorativa" data-en="Decorative lighting">Iluminación decorativa</li>
+        <li data-es="Sistema de sonido" data-en="Sound system">Sistema de sonido</li>
+        <li data-es="Coordinador de evento" data-en="Event coordinator">Coordinador de evento</li>
+        <li data-es="Área de fotos" data-en="Photo area">Área de fotos</li>
+      </ul>
+      <a href="#contact" class="btn btn-primary" data-es="Reservar Ahora" data-en="Book Now">Reservar Ahora</a>
+    </div>
+    <div class="package reveal">
+      <h3 data-es="Exclusivo" data-en="Exclusive">Exclusivo</h3>
+      <div class="package-price" data-es="Consultar<br><span>experiencia VIP</span>" data-en="Inquire<br><span>VIP experience</span>">Consultar<br><span>experiencia VIP</span></div>
+      <ul>
+        <li data-es="Acceso todo el día (hasta 14 hrs)" data-en="Full-day access (up to 14 hrs)">Acceso todo el día (hasta 14 hrs)</li>
+        <li data-es="Decoración completa personalizada" data-en="Full custom décor">Decoración completa personalizada</li>
+        <li data-es="Iluminación profesional" data-en="Professional lighting">Iluminación profesional</li>
+        <li data-es="Sonido profesional + DJ" data-en="Professional sound + DJ">Sonido profesional + DJ</li>
+        <li data-es="Catering disponible" data-en="Catering available">Catering disponible</li>
+        <li data-es="Coordinación total del evento" data-en="Full event coordination">Coordinación total del evento</li>
+      </ul>
+      <a href="#contact" class="btn btn-outline" style="color:var(--dark);border-color:rgba(0,0,0,.15)" data-es="Consultar" data-en="Inquire">Consultar</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials" class="testimonials">
+  <div class="section-label reveal" data-es="Testimonios" data-en="Testimonials">Testimonios</div>
+  <h2 class="section-title reveal" style="color:var(--cream);margin-bottom:48px" data-es="Lo que dicen<br>nuestros clientes" data-en="What our<br>clients say">Lo que dicen<br>nuestros clientes</h2>
+  <div class="testimonials-content reveal">
+    <p class="testimonial-text" data-es="Fue el lugar perfecto para nuestra boda. El espacio, la atención, todo fue increíble. Nuestros invitados todavía hablan del evento. ¡Gracias Ranchos El Jefe!" data-en="It was the perfect venue for our wedding. The space, the service, everything was incredible. Our guests still talk about the event. Thank you, Ranchos El Jefe!">Fue el lugar perfecto para nuestra boda. El espacio, la atención, todo fue increíble. Nuestros invitados todavía hablan del evento. ¡Gracias Ranchos El Jefe!</p>
+    <div class="testimonial-author">María & Carlos</div>
+    <div class="testimonial-event" data-es="Boda — Diciembre 2025" data-en="Wedding — December 2025">Boda — Diciembre 2025</div>
+  </div>
+  <div class="testimonial-dots"><span class="active"></span><span></span><span></span></div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-section">
+  <div class="contact-inner">
+    <div class="contact-info reveal">
+      <div class="section-label" data-es="Contacto" data-en="Contact">Contacto</div>
+      <h2 data-es="Hagamos tu<br>evento realidad" data-en="Let's make your<br>event a reality">Hagamos tu<br>evento realidad</h2>
+      <p style="font-size:16px;color:var(--brown-light);line-height:1.8;margin-bottom:36px" data-es="Agenda un recorrido gratuito para conocer nuestro espacio y empezar a planificar tu celebración perfecta." data-en="Schedule a free tour to see our venue and start planning your perfect celebration.">Agenda un recorrido gratuito para conocer nuestro espacio y empezar a planificar tu celebración perfecta.</p>
+      <div class="contact-detail">
+        <div class="contact-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <div><h4 data-es="Dirección" data-en="Address">Dirección</h4><p>21320 SW 336th St<br>Homestead, FL 33034</p></div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.12.8.36 1.58.7 2.31a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.73.34 1.51.58 2.31.7A2 2 0 0122 16.92z"/></svg></div>
+        <div><h4 data-es="Teléfono" data-en="Phone">Teléfono</h4><p>(786) 457-4664</p></div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <div><h4 data-es="Horarios" data-en="Hours">Horarios</h4><p data-es="Lunes a Domingo<br>Con cita previa para recorridos" data-en="Monday to Sunday<br>By appointment for tours">Lunes a Domingo<br>Con cita previa para recorridos</p></div>
+      </div>
+      <div class="contact-social">
+        <a href="https://www.instagram.com/eventosranchoeljefe/" target="_blank" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+        <a href="https://wa.me/17864574664" target="_blank" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+      </div>
+    </div>
+    <div class="contact-form reveal">
+      <h3 data-es="Solicita tu recorrido" data-en="Request your tour">Solicita tu recorrido</h3>
+      <p data-es="Responderemos dentro de 24 horas" data-en="We'll respond within 24 hours">Responderemos dentro de 24 horas</p>
+      <div class="form-row">
+        <div class="form-group"><label data-es="Nombre" data-en="Name">Nombre</label><input type="text" data-es-placeholder="Tu nombre completo" data-en-placeholder="Your full name" placeholder="Tu nombre completo"></div>
+        <div class="form-group"><label data-es="Teléfono" data-en="Phone">Teléfono</label><input type="tel" placeholder="(xxx) xxx-xxxx"></div>
+      </div>
+      <div class="form-group"><label>Email</label><input type="email" data-es-placeholder="tu@email.com" data-en-placeholder="you@email.com" placeholder="tu@email.com"></div>
+      <div class="form-group"><label data-es="Tipo de Evento" data-en="Event Type">Tipo de Evento</label>
+        <select id="eventTypeSelect">
+          <option value="" data-es="Seleccionar..." data-en="Select...">Seleccionar...</option>
+          <option data-es="Boda" data-en="Wedding">Boda</option>
+          <option data-es="Quinceañera" data-en="Quinceañera">Quinceañera</option>
+          <option data-es="Cumpleaños" data-en="Birthday">Cumpleaños</option>
+          <option data-es="Baby Shower" data-en="Baby Shower">Baby Shower</option>
+          <option data-es="Evento Corporativo" data-en="Corporate Event">Evento Corporativo</option>
+          <option data-es="Otro" data-en="Other">Otro</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label data-es="Fecha Estimada" data-en="Estimated Date">Fecha Estimada</label><input type="date"></div>
+        <div class="form-group"><label data-es="Número de Invitados" data-en="Number of Guests">Número de Invitados</label><input type="number" data-es-placeholder="Ej: 100" data-en-placeholder="E.g.: 100" placeholder="Ej: 100"></div>
+      </div>
+      <div class="form-group"><label data-es="Mensaje" data-en="Message">Mensaje</label><textarea data-es-placeholder="Cuéntanos sobre tu evento..." data-en-placeholder="Tell us about your event..." placeholder="Cuéntanos sobre tu evento..."></textarea></div>
+      <button class="btn btn-primary" data-es="Enviar Solicitud" data-en="Submit Request">Enviar Solicitud</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <h2>Ranchos El Jefe</h2>
+        <p data-es="Un rancho hecho pa'l reventón. El espacio perfecto para tus celebraciones más importantes en Homestead, Florida." data-en="A ranch built for the celebration. The perfect space for your most important celebrations in Homestead, Florida.">Un rancho hecho pa'l reventón. El espacio perfecto para tus celebraciones más importantes en Homestead, Florida.</p>
+      </div>
+      <div class="footer-col">
+        <h4 data-es="Navegación" data-en="Navigation">Navegación</h4>
+        <a href="#about" data-es="Nosotros" data-en="About">Nosotros</a>
+        <a href="#events" data-es="Eventos" data-en="Events">Eventos</a>
+        <a href="#gallery" data-es="Galería" data-en="Gallery">Galería</a>
+        <a href="#packages" data-es="Paquetes" data-en="Packages">Paquetes</a>
+        <a href="#contact" data-es="Contacto" data-en="Contact">Contacto</a>
+      </div>
+      <div class="footer-col">
+        <h4 data-es="Eventos" data-en="Events">Eventos</h4>
+        <a href="#events" data-es="Bodas" data-en="Weddings">Bodas</a>
+        <a href="#events">Quinceañeras</a>
+        <a href="#events" data-es="Cumpleaños" data-en="Birthdays">Cumpleaños</a>
+        <a href="#events" data-es="Baby Showers" data-en="Baby Showers">Baby Showers</a>
+        <a href="#events" data-es="Corporativos" data-en="Corporate">Corporativos</a>
+      </div>
+      <div class="footer-col">
+        <h4 data-es="Contacto" data-en="Contact">Contacto</h4>
+        <a href="tel:+17864574664">(786) 457-4664</a>
+        <a href="https://www.instagram.com/eventosranchoeljefe/">@eventosranchoeljefe</a>
+        <a href="https://maps.google.com/?q=21320+SW+336th+St+Homestead+FL" data-es="Cómo Llegar" data-en="Get Directions">Cómo Llegar</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p data-es="&copy; 2026 Eventos Ranchos El Jefe. Todos los derechos reservados." data-en="&copy; 2026 Eventos Ranchos El Jefe. All rights reserved.">&copy; 2026 Eventos Ranchos El Jefe. Todos los derechos reservados.</p>
+      <p>Homestead, Florida</p>
+    </div>
+  </div>
+</footer>
+
+<!-- WHATSAPP -->
+<a href="https://wa.me/17864574664" target="_blank" class="whatsapp-float" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+let currentLang = 'es';
+
+function setLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+
+  document.querySelectorAll('[data-' + lang + ']').forEach(el => {
+    const val = el.getAttribute('data-' + lang);
+    if (val !== null) el.innerHTML = val;
+  });
+
+  document.querySelectorAll('[data-' + lang + '-placeholder]').forEach(el => {
+    el.placeholder = el.getAttribute('data-' + lang + '-placeholder');
+  });
+
+  // Update select options
+  document.querySelectorAll('select option[data-' + lang + ']').forEach(opt => {
+    opt.textContent = opt.getAttribute('data-' + lang);
+  });
+}
+
+// Nav scroll
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 80);
+});
+
+// Scroll reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+}, { threshold: .15, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Smooth scrolling
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>
